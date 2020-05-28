@@ -9,6 +9,13 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 
+/**
+ * 
+ * Simple client to upload file using HTTP POST method
+ * 
+ * @author codecarver
+ *
+ */
 public class ClientUploadFile {
 
 	public static void main(String[] args) throws Exception{
@@ -20,20 +27,24 @@ public class ClientUploadFile {
 		connection.setRequestMethod("POST");
 
 		// file location
-		FileBody fileBody = new FileBody(new File("C:\\Users\\dsi\\workspace\\workspace_gitlab\\PlayGround\\src\\main\\java\\com\\wani\\playground\\jambi\\test.txt"));
+		FileBody fileBody = new FileBody(new File("C:\\Users\\codecarver\\workspace\\workspace_gitlab\\PlayGround\\src\\main\\java\\com\\wani\\playground\\jambi\\test.txt"));
 		MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.STRICT);
 		multipartEntity.addPart("file", fileBody);
 
 		connection.setRequestProperty("Content-Type", multipartEntity.getContentType().getValue());
 		OutputStream out = connection.getOutputStream();
+		
 		try {
+			
 		    multipartEntity.writeTo(out);
 		} finally {
-		    out.close();
+		
+			out.close();
 		}
 		
 		int status = connection.getResponseCode();
 		
+		// the result
 		System.out.println("status: " + status);
 	}
 }
