@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
  * 
  * @author Siwi, Andrianus
  * 
- * Sample test class to provide 3DES with CDC method
+ * Sample test class to provide 3DES encryption with CDC method
  * 
  */
 public class Test3DesCbc {
