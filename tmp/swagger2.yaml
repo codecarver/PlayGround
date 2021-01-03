@@ -1,0 +1,69 @@
+openapi: 3.0.1
+info:
+  title: micro-gate
+  description: This is the documentation of micro-gate REST spesification.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: //www.pactindo.com/v1
+tags:
+- name: cif
+  description: Everything about Customer
+- name: account
+  description: Everything about Account
+paths:
+  /customer/findByAcc:
+    get:
+      tags:
+      - cif
+      summary: Find Customer by Account Number
+      operationId: findCifByAcc
+      parameters:
+      - name: accountNumber
+        in: query
+        description: Account Number
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        account:
+          type: string
+          description: Account Number
+          example: "0123456"
+        customerName:
+          type: string
+          example: Siwi Arie Widadi
+        currency:
+          type: string
+          example: "360"
+      xml:
+        name: Customer
+    CustomerResponse:
+      type: object
+      properties:
+        responseCode:
+          type: string
+          example: "00"
+        description:
+          type: string
+          example: SUCCESS
+        data:
+          $ref: '#/components/schemas/Customer'
+      xml:
+        name: Customer
