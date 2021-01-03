@@ -1,0 +1,98 @@
+swagger: "2.0"
+info:
+  description: "This is the documentation of micro-gate REST spesification."
+  version: "1.0.0"
+  title: "micro-gate"
+  # termsOfService: "http://swagger.io/terms/"
+  # contact:
+    # email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "www.pactindo.com"
+basePath: "/v1"
+tags:
+- name: "cif"
+  description: "Everything about Customer"
+- name: "account"
+  description: "Everything about Account"
+  # externalDocs:
+    # description: "Find out more"
+    # url: "http://swagger.io"
+#- name: "store"
+#  description: "Access to Petstore orders"
+#- name: "user"
+#  description: "Operations about user"
+#  externalDocs:
+#    description: "Find out more about our store"
+#    url: "http://swagger.io"
+#schemes:
+#- "https"
+#- "http"
+paths:
+  /customer/findByAcc:
+    get:
+      tags:
+      - "cif"
+      summary: "Find Customer by Account Number"
+      # description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "findCifByAcc"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "accountNumber"
+        in: "query"
+        description: "Account Number"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CustomerResponse"
+        # "400":
+        #  description: "Invalid tag value"
+      #security:
+      #- petstore_auth:
+      #  - "write:pets"
+      #  - "read:pets"
+      # deprecated: true
+  
+definitions:
+  
+  Customer:
+    type: "object"
+    required:
+    - "txType"
+    properties:
+      account:
+        type: "string"
+        example: "0123456"
+        description: Account Number
+      customerName:
+        type: "string"
+        example: "Siwi Arie Widadi"
+      currency:
+        type: "string"
+        example: "360"
+    xml:
+      name: "Customer"
+  CustomerResponse:
+    type: "object"
+    required:
+    - "txType"
+    properties:
+      responseCode:
+        type: "string"
+        example: "00"
+      description:
+        type: "string"
+        example: "SUCCESS"
+      data:
+        $ref: '#/definitions/Customer'
+    xml:
+      name: "Customer"
+  
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
