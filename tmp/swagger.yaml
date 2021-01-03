@@ -1,70 +1,150 @@
 openapi: 3.0.1
 info:
   title: micro-gate
-  description: This is the documentation of micro-gate REST spesification.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: This is the documentation of micro-gate REST API specification.
   version: 1.0.0
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
 servers:
-- url: //www.pactindo.com/v1
+  - url: //www.pactindo.com/v1
 tags:
-- name: cif
-  description: Everything about Customer
-- name: account
-  description: Everything about Account
+  - name: customer
+    description: Everything about Customer
+  - name: account
+    description: Everything about Account
+  - name: transfer
+    description: Everything about Transfer
+  - name: purchase
+    description: Everything about Purchase and Payment
+  - name: nik
+    description: Everything about NIK
+  - name: sikp
+    description: Everything about SIKP
+  - name: flpp
+    description: Everything about FLPP
 paths:
-  /txType=01:
+  /customer/findByAcc:
     get:
       tags:
-      - cif
+        - 'customer, account'
       summary: Find Customer by Account Number
       operationId: findCustByAcc
       parameters:
-      - name: txType
-        in: query
-        description: Transaction Type
-        required: true
-        schema:
-          type: string
-          default: "01"
-      - name: accountNumber
-        in: query
-        description: Account Number
-        required: true
-        schema:
-          type: string
+        - name: accountNumber
+          in: query
+          description: Account Number
+          required: true
+          schema:
+            type: string
       responses:
-        200:
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerResponse'
-  /txType=02:
+              examples:
+                sampleCustomer-findByAcc:
+                  value: >-
+                    {"responseCode":"00","description":"SUCCESS","data":{"clearBalance":"4497352664","currency":"360","customerName":"WAHYUDI","productCode":"101","productName":"","account":"00102010046625","availableBalance":"50000"}}
+  /customer/findByCif:
     get:
       tags:
-      - cif
+        - customer
       summary: Find Customer by CIF Number
       operationId: findCustByCif
       parameters:
-      - name: cifNumber
-        in: query
-        description: Account Number
-        required: true
-        schema:
-          type: string
-          default: "02"
+        - name: cifNumber
+          in: query
+          description: Account Number
+          required: true
+          schema:
+            type: string
       responses:
-        200:
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerResponse'
+  /customer/findByNIK:
+    get:
+      tags:
+        - 'customer, nik'
+      summary: Find Customer by NIK
+      operationId: findCustByNIK
+      parameters:
+        - name: accountNumber
+          in: query
+          description: Account Number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+  /account/findSaving:
+    get:
+      tags:
+        - account
+      summary: Find Saving Account
+      operationId: findSavingAccount
+      parameters:
+        - name: cifNum
+          in: query
+          description: CIF Number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+  /account/findLoan:
+    get:
+      tags:
+        - account
+      summary: Find Loan Account
+      operationId: findLoanAccount
+      parameters:
+        - name: cifNum
+          in: query
+          description: CIF Number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+  /account/findDeposit:
+    get:
+      tags:
+        - account
+      summary: Find Deposit Account
+      operationId: findDepositAccount
+      parameters:
+        - name: cifNum
+          in: query
+          description: CIF Number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
 components:
   schemas:
     Customer:
@@ -72,26 +152,73 @@ components:
       properties:
         account:
           type: string
-          description: Account Number
-          example: "0123456"
+          description: account number
+          example: '0123456'
         customerName:
           type: string
           example: Siwi Arie Widadi
         currency:
           type: string
-          example: "360"
-      xml:
-        name: Customer
+          example: '360'
+        productCode:
+          type: string
+          example: '001'
+        productName:
+          type: string
+          example: SIMPEDA
+        clearBalance:
+          type: string
+          example: '18031.29'
+          description: 'Format: Number, 13.2'
+        availableBalance:
+          type: string
+          example: '18031.30'
+          description: 'Format: Number, 13.2'
     CustomerResponse:
       type: object
       properties:
         responseCode:
           type: string
-          example: "00"
+          example: '00'
         description:
           type: string
           example: SUCCESS
         data:
           $ref: '#/components/schemas/Customer'
-      xml:
-        name: Customer
+    Account:
+      type: object
+      properties:
+        account:
+          type: string
+          description: account number
+          example: '0123456'
+        name:
+          type: string
+          example: Siwi Arie Widadi
+        productCode:
+          type: string
+          example: '001'
+        productName:
+          type: string
+          example: SIMPEDA
+        accStatus:
+          type: string
+          example: A
+        accType:
+          type: string
+          example: '1'
+        currency:
+          type: string
+          example: '360'
+        plafond:
+          type: string
+          example: '18031.28'
+          description: 'Format: Number, 13.2'
+        clearBalance:
+          type: string
+          example: '18031.29'
+          description: 'Format: Number, 13.2'
+        workingBalance:
+          type: string
+          example: '18031.30'
+          description: 'Format: Number, 13.2'
