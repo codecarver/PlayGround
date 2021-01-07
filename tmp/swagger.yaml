@@ -2,18 +2,16 @@ openapi: 3.0.1
 info:
   title: micro-gate
   description: This is the documentation of micro-gate REST API specification.
-  version: 1.0.0
+  version: 0.1.3
 servers:
-  - url: //www.pactindo.com/v1
+  - url: http://172.19.252.114:7000/
 tags:
   - name: customer
     description: Everything about Customer
   - name: account
     description: Everything about Account
-  - name: transfer
-    description: Everything about Transfer
-  - name: purchase
-    description: Everything about Purchase and Payment
+  - name: transaction
+    description: Everything about Transaction
   - name: nik
     description: Everything about NIK
   - name: sikp
@@ -21,7 +19,7 @@ tags:
   - name: flpp
     description: Everything about FLPP
 paths:
-  /customer/findByAcc:
+  '/customer/findByAcc': # done
     get:
       tags:
         - 'customer, account'
@@ -40,12 +38,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
-              examples:
-                sampleCustomer-findByAcc:
-                  value: >-
-                    {"responseCode":"00","description":"SUCCESS","data":{"clearBalance":"4497352664","currency":"360","customerName":"WAHYUDI","productCode":"101","productName":"","account":"00102010046625","availableBalance":"50000"}}
-  /customer/findByCif:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    $ref: '#/components/schemas/Customer'
+  '/customer/findByCif': # done
     get:
       tags:
         - customer
@@ -64,17 +69,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
-  /customer/findByNIK:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    $ref: '#/components/schemas/Customer'
+  '/customer/findByNIK': # done
     get:
       tags:
         - 'customer, nik'
       summary: Find Customer by NIK
       operationId: findCustByNIK
       parameters:
-        - name: accountNumber
+        - name: nik
           in: query
-          description: Account Number
+          description: NIK
           required: true
           schema:
             type: string
@@ -84,8 +100,41 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerResponse'
-  /account/findSaving:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    $ref: '#/components/schemas/Customer'
+  '/customer':
+    post:
+      tags:
+        - customer
+      summary: Customer Creation
+      operationId: createCustomer 
+      requestBody:
+        description: TBD
+        required: true
+        content:
+          application/json:
+            schema:
+              description: TBD
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                description: TBD
+  # saving account: get (done), post (not yet)
+  '/account/saving':
     get:
       tags:
         - account
@@ -104,28 +153,42 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
-  /account/findLoan:
-    get:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SavingAccount'              
+    post:
       tags:
         - account
-      summary: Find Loan Account
-      operationId: findLoanAccount
-      parameters:
-        - name: cifNum
-          in: query
-          description: CIF Number
-          required: true
-          schema:
-            type: string
+      summary: Saving Account Creation
+      operationId: createSavingAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: To Be Defined
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
-  /account/findDeposit:
+                type: object
+                description: To Be Defined
+  # deposit account: get (done), post (not yet)
+  '/account/deposit':
     get:
       tags:
         - account
@@ -144,7 +207,612 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SavingAccount'
+    post:
+      tags:
+        - account
+      summary: Deposit Account Creation
+      operationId: createDepositAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: To Be Defined
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                description: To Be Defined
+  # loan account: get (done), post (not yet)
+  '/account/loan':
+    get:
+      tags:
+        - account
+      summary: Find Loan Account
+      operationId: findLoanAccount
+      parameters:
+        - name: cifNum
+          in: query
+          description: CIF Number
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SavingAccount'
+    post:
+      tags:
+        - account
+      summary: Loan Account Creation
+      operationId: createLoanAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: To Be Defined
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                description: To Be Defined
+  '/account/statement': # done
+    get:
+      tags:
+        - account
+      summary: Account Statement
+      operationId: accountStatement
+      parameters:
+        - name: account
+          in: query
+          description: Account Number
+          required: true
+          schema:
+            type: string
+        - name: lineCount
+          in: query
+          description: Line Count
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: Start Date
+          required: false
+          schema:
+            type: string
+        - name: endDate
+          in: query
+          description: End Date
+          required: false
+          schema:
+            type: string
+        - name: index
+          in: query
+          description: Index
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  data:
+                    type: object
+                    properties:
+                      next:
+                        type: string
+                        description: Next or not (Y/N)
+                        example: "N"
+                      index:
+                        type: string
+                        description: Index
+                        example: "1"
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccountStatement'
+  '/trx/purchase':
+    get:
+      tags:
+        - transaction
+      summary: Purchase Payment Inquiry
+      operationId: purchaseInq
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: billerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: fee
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: description
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: referenceNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: srcAccount
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: termType
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: termId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  inqData:
+                    type: string
+                    description: Inquiry Data
+                    example: "12345"
+                  data:
+                    type: object
+                    oneOf:
+                      - $ref: '#/components/schemas/PurchasePulsaInq'
+                      - $ref: '#/components/schemas/PurchaseTokenPlnInq'
+                  
+    post:
+      tags:
+        - transaction
+      summary: Purchase Payment Posting
+      operationId: purchasePost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Purchase'
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  data:
+                    type: object
+                    oneOf:
+                      - $ref: '#/components/schemas/PurchasePulsaPost'
+                      - $ref: '#/components/schemas/PurchaseTokenPlnPost'
+  '/trx/withdrawal':  # done
+    post:
+      tags:
+        - transaction
+      summary: Cash Withdrawal
+      operationId: withdrawal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - account
+                - amount
+                - termId
+                - referenceNumber
+              type: object
+              properties:
+                account:
+                  type: string
+                  example: "12345678"
+                amount:
+                  $ref: '#/components/schemas/Amount'
+                termId:
+                  type: string
+                  example: "ATM1001"
+                termType:
+                  type: string
+                  example: "ATM"
+                referenceNumber:
+                  type: string
+                  example: "87654321"
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  balance:
+                    $ref: '#/components/schemas/Amount'
+  '/trx/cardlessWithdrawal':  # done
+    post:
+      tags:
+        - transaction
+      summary: Cardless Cash Withdrawal
+      operationId: cardlessWithdrawal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: string
+                  example: "12345678"
+                amount:
+                  $ref: '#/components/schemas/Amount'
+                voucherCode:
+                  type: string
+                  example: "112233"
+                mobilePhone:
+                  type: string
+                  example: "0812345678"
+                termId:
+                  type: string
+                  example: "ATM1001"
+                termType:
+                  nullable: true
+                  type: string
+                  example: "ATM"
+                referenceNumber:
+                  type: string
+                  example: "87654321"
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+  '/trx/deposit': # done
+    post:
+      tags:
+        - transaction
+      summary: Cash Deposit
+      operationId: deposit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - srcAccount
+                - amount
+                - termId
+                - referenceNumber
+              type: object
+              properties:
+                srcAccount:
+                  type: string
+                  example: "12345678"
+                destAccount:
+                  type: string
+                  example: "87654321"
+                amount:
+                  $ref: '#/components/schemas/Amount'
+                termId:
+                  type: string
+                  example: "ATM1001"
+                termType:
+                  type: string
+                  example: "ATM"
+                referenceNumber:
+                  type: string
+                  example: "87654321"
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  balance:
+                    $ref: '#/components/schemas/Amount'
+  '/trx/transfer':  # done
+    get:
+      tags:
+        - transaction
+      summary: Overbook Transfer Inquiry
+      operationId: transferInq
+      parameters:
+        - in: query
+          name: srcAccount
+          description: Source Account
+          example: "12345678"
+          schema:
+            type: string
+        - in: query
+          name: destAccount
+          example: "87654321"
+          description: Destination Account
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  receiverName:
+                    type: string
+                    description: Response Description
+                    example: "Willy Handika"
+    post:
+      tags:
+        - transaction
+      summary: Overbook Transfer Posting
+      operationId: transferPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+  '/trx/onlineTransfer':  # done
+    get:
+      tags:
+        - transaction
+      summary: Interbank Transfer Inquiry
+      operationId: interbankTransferInq
+      parameters:
+        - in: query
+          name: srcAccount
+          description: Source Account
+          example: "12345678"
+          schema:
+            type: string
+        - in: query
+          name: descAccount
+          example: "87654321"
+          description: Destination Account
+          schema:
+            type: string
+        - in: query
+          name: destBankCode
+          example: "009"
+          description: Destination Bank Code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  receiverName:
+                    type: string
+                    description: Response Description
+                    example: "Willy Handika"
+    post:
+      tags:
+        - transaction
+      summary: Interbank Transfer Posting
+      operationId: interbankTransferPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InterbankTransfer'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+  '/trx/sknTransfer':
+    post:
+      tags:
+        - transaction
+      summary: SKN Transfer Posting
+      operationId: sknTransferPost
+      requestBody:
+        description: TBD
+        required: true
+        content:
+          application/json:
+            schema:
+              description: TBD
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                description: TBD
+  '/trx/rtgsTransfer':
+    post:
+      tags:
+        - transaction
+      summary: RTGS Transfer Posting
+      operationId: rtgsTransferPost
+      requestBody:
+        description: TBD
+        required: true
+        content:
+          application/json:
+            schema:
+              description: TBD
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                description: TBD
 components:
   schemas:
     Customer:
@@ -174,18 +842,28 @@ components:
           type: string
           example: '18031.30'
           description: 'Format: Number, 13.2'
-    CustomerResponse:
+    AccountStatement:
       type: object
       properties:
-        responseCode:
+        sign:
           type: string
-          example: '00'
+          example: D
+          description: Debet or credit flag
+        time:
+          type: string
+          example: "1201"
+          description: Time in HHMM format
+        amount:
+          $ref: '#/components/schemas/Amount'
         description:
           type: string
-          example: SUCCESS
-        data:
-          $ref: '#/components/schemas/Customer'
-    Account:
+          example: FT ATM xx
+        endBalance:
+          $ref: '#/components/schemas/Amount'
+        referenceNumber:
+          type: string
+          example: FT123456
+    SavingAccount:
       type: object
       properties:
         account:
@@ -211,14 +889,153 @@ components:
           type: string
           example: '360'
         plafond:
-          type: string
-          example: '18031.28'
-          description: 'Format: Number, 13.2'
+          $ref: '#/components/schemas/Amount'
         clearBalance:
-          type: string
-          example: '18031.29'
-          description: 'Format: Number, 13.2'
+          $ref: '#/components/schemas/Amount'
         workingBalance:
+          $ref: '#/components/schemas/Amount'
+    Amount:
+      type: string
+      example: '18031.28'
+      description: 'Format: Number, 13.2'
+    Transfer:
+      type: object
+      properties:
+        srcAccount:
           type: string
-          example: '18031.30'
-          description: 'Format: Number, 13.2'
+          example: "12345678"
+        descAccount:
+          type: string
+          example: "87654321"
+        amount:
+          $ref: '#/components/schemas/Amount'
+        description:
+          type: string
+          example: "Biaya servis AC"
+        terminalId:
+          type: string
+          description: Terminal Id or customerId for MB trx
+          example: "ATM1001"
+        referenceNumber:
+          type: string
+          example: "1122334455"
+    InterbankTransfer:
+      type: object
+      properties:
+        srcAccount:
+          type: string
+          example: "12345678"
+        cardNumber:
+          type: string
+          example: "58791234578"
+        descAccount:
+          type: string
+          example: "87654321"
+        descBankAccount:
+          type: string
+          example: "87654321"
+        amount:
+          $ref: '#/components/schemas/Amount'
+        description:
+          type: string
+          example: "Biaya servis AC"
+        terminalId:
+          type: string
+          description: Terminal Id or customerId for MB trx
+          example: "ATM1001"
+        referenceNumber:
+          type: string
+          example: "1122334455"
+    PurchasePulsaPost:
+      description: Purchase pulsa
+      type: object
+      properties:
+        windowPeriod:
+          type: string
+          example: "1122334455"
+        serialNumber:
+          type: string
+          example: "122021"
+    PurchaseTokenPlnPost:
+      description: Purchase token PLN
+      type: object
+      properties:
+        sn:
+          type: string
+          example: "12345123451234512345"
+        customerName:
+          type: string
+          example: "Iwank"
+        upCode:
+          type: string
+          example: "0050"
+        numberOfBills:
+          type: string
+          example: "3"
+    PurchasePulsaInq:
+      description: Purchase pulsa
+      type: object
+      properties:
+        windowPeriod:
+          type: string
+          example: "1122334455"
+        serialNumber:
+          type: string
+          example: "122021"
+    PurchaseTokenPlnInq:
+      description: Purchase token PLN
+      type: object
+      properties:
+        sn:
+          type: string
+          example: "12345123451234512345"
+        customerName:
+          type: string
+          example: "Iwank"
+        upCode:
+          type: string
+          example: "0050"
+        numberOfBills:
+          type: string
+          example: "3"
+    Purchase:
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: "12345678"
+        type:
+          type: string
+          example: "PULSA"
+        billerId:
+          type: string
+          example: "XLPRE"
+        productId:
+          type: string
+          example: "0050"
+        amount:
+          $ref: '#/components/schemas/Amount'
+        fee:
+          $ref: '#/components/schemas/Amount'
+        description:
+          type: string
+          example: "Beli pulsa XL 50K"
+        termId:
+          type: string
+          description: Terminal Id or customerId for MB trx
+          example: "ATM1001"
+        termType:
+          type: string
+          description: Terminal Id or customerId for MB trx
+          example: "ATM/MB/LP"
+        referenceNumber:
+          type: string
+          example: "1122334455"
+        sourceAccount:
+          type: string
+          example: "1122334455"
+        inqData:
+          type: string
+          example: "Value is same as inquiry response"
+    
+        
