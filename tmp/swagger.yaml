@@ -49,7 +49,7 @@ paths:
                     description: Response Description
                     example: SUCCESS
                   data:
-                    $ref: '#/components/schemas/Customer'
+                    $ref: '#/components/schemas/CustomerInquiry'
   '/customer/findByCif': # done
     get:
       tags:
@@ -57,7 +57,7 @@ paths:
       summary: Find Customer by CIF Number
       operationId: findCustByCif
       parameters:
-        - name: cifNumber
+        - name: customerNumber
           in: query
           description: Account Number
           required: true
@@ -80,7 +80,7 @@ paths:
                     description: Response Description
                     example: SUCCESS
                   data:
-                    $ref: '#/components/schemas/Customer'
+                    $ref: '#/components/schemas/CustomerInquiry'
   '/customer/findByNIK': # done
     get:
       tags:
@@ -111,20 +111,19 @@ paths:
                     description: Response Description
                     example: SUCCESS
                   data:
-                    $ref: '#/components/schemas/Customer'
-  '/customer':
+                    $ref: '#/components/schemas/CustomerInquiry'
+  '/customer': # done
     post:
       tags:
         - customer
       summary: Customer Creation
       operationId: createCustomer 
       requestBody:
-        description: TBD
         required: true
         content:
           application/json:
             schema:
-              description: TBD
+               $ref: '#/components/schemas/CustomerPost'
       responses:
         '200':
           description: successful operation
@@ -132,16 +131,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: TBD
-  # saving account: get (done), post (not yet)
-  '/account/saving':
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    type: object
+                    properties:
+                      customerNumber:
+                        type: string
+                        example: "118951"
+  '/account/saving':  # done
     get:
       tags:
         - account
       summary: Find Saving Account
       operationId: findSavingAccount
       parameters:
-        - name: cifNum
+        - name: customerNumber
           in: query
           description: CIF Number
           required: true
@@ -166,7 +178,7 @@ paths:
                   list:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SavingAccount'              
+                      $ref: '#/components/schemas/SavingAccountInq'              
     post:
       tags:
         - account
@@ -177,8 +189,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              description: To Be Defined
+              $ref: '#/components/schemas/SavingAccountPost'
       responses:
         '200':
           description: successful operation
@@ -186,7 +197,21 @@ paths:
             application/json:
               schema:
                 type: object
-                description: To Be Defined
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    type: object
+                    properties:
+                      accountNumber:
+                        type: string
+                        example: "3000197838"
   # deposit account: get (done), post (not yet)
   '/account/deposit':
     get:
@@ -195,7 +220,7 @@ paths:
       summary: Find Deposit Account
       operationId: findDepositAccount
       parameters:
-        - name: cifNum
+        - name: customerNumber
           in: query
           description: CIF Number
           required: true
@@ -220,7 +245,7 @@ paths:
                   list:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SavingAccount'
+                      $ref: '#/components/schemas/DepositAccountInq'
     post:
       tags:
         - account
@@ -231,8 +256,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              description: To Be Defined
+              $ref: '#/components/schemas/DepositAccountPost'
       responses:
         '200':
           description: successful operation
@@ -240,7 +264,21 @@ paths:
             application/json:
               schema:
                 type: object
-                description: To Be Defined
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: SUCCESS
+                  data:
+                    type: object
+                    properties:
+                      accountNumber:
+                        type: string
+                        example: "3000197838"
   # loan account: get (done), post (not yet)
   '/account/loan':
     get:
@@ -249,7 +287,7 @@ paths:
       summary: Find Loan Account
       operationId: findLoanAccount
       parameters:
-        - name: cifNum
+        - name: customerNumber
           in: query
           description: CIF Number
           required: true
@@ -274,7 +312,7 @@ paths:
                   list:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SavingAccount'
+                      $ref: '#/components/schemas/LoanAccountInq'
     post:
       tags:
         - account
@@ -531,8 +569,11 @@ paths:
                     type: string
                     description: Response Description
                     example: "SUCCESS"
-                  balance:
-                    $ref: '#/components/schemas/Amount'
+                  data:
+                    type: object
+                    properties:
+                      balance:
+                          $ref: '#/components/schemas/Amount'
   '/trx/cardlessWithdrawal':  # done
     post:
       tags:
@@ -815,33 +856,116 @@ paths:
                 description: TBD
 components:
   schemas:
-    Customer:
+    CustomerInquiry:
       type: object
       properties:
-        account:
-          type: string
-          description: account number
-          example: '0123456'
         customerName:
           type: string
           example: Siwi Arie Widadi
-        currency:
+          description: Customer Full Name
+        firstName:
           type: string
-          example: '360'
-        productCode:
+          example: Siwi
+        middleName:
           type: string
-          example: '001'
-        productName:
+          example: Arie
+        lastName:
           type: string
-          example: SIMPEDA
-        clearBalance:
+          example: Widadi
+        email:
           type: string
-          example: '18031.29'
-          description: 'Format: Number, 13.2'
-        availableBalance:
+          example: someone@email.com
+        phone:
           type: string
-          example: '18031.30'
-          description: 'Format: Number, 13.2'
+          example: '62812123456'
+        idDocumentNumber:
+          type: string
+          description: Identity Doc. Number
+          example: '3515010119910001'
+        idDocumentType:
+          type: string
+          description: Identity Doc. Type
+          example: 'KTP'
+        dateOfBirth:  
+          type: string
+          example: "19910131"
+          description: "YYYY-MM-DD format"
+        placeOfBirth:  
+          type: string
+          example: 'Sidoarjo'
+        motherMaidenName: 
+          type: string
+          example: 'Nama Ibu'
+        spouseName:
+          type: string
+          example: 'Husband/Wife Name'
+        address:
+          type: string
+          example: 'Jalan Diponegoro no. 1 - Sidoarjo'
+        gender:  
+          type: string
+          example: "MALE/FEMALE"
+        occupation: 
+          type: string
+          example: '017'
+        nationality: 
+          type: string
+          example: 'ID'
+    CustomerPost:
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: Siwi Arie Widadi
+          description: Customer Full Name
+        firstName:
+          type: string
+          example: Siwi
+        middleName:
+          type: string
+          example: Arie
+        lastName:
+          type: string
+          example: Widadi
+        email:
+          type: string
+          example: someone@email.com
+        phone:
+          type: string
+          example: '62812123456'
+        idDocumentNumber:
+          type: string
+          description: Identity Doc. Number
+          example: '3515010119910001'
+        idDocumentType:
+          type: string
+          description: Identity Doc. Type
+          example: 'KTP'
+        dateOfBirth:  
+          type: string
+          example: "19910131"
+          description: "YYYY-MM-DD format"
+        placeOfBirth:  
+          type: string
+          example: 'Sidoarjo'
+        motherMaidenName: 
+          type: string
+          example: 'Nama Ibu'
+        spouseName:
+          type: string
+          example: 'Husband/Wife Name'
+        address:
+          type: string
+          example: 'Jalan Diponegoro no. 1 - Sidoarjo'
+        gender:  
+          type: string
+          example: "MALE/FEMALE"
+        occupation: 
+          type: string
+          example: '017'
+        nationality: 
+          type: string
+          example: 'ID'
     AccountStatement:
       type: object
       properties:
@@ -863,7 +987,7 @@ components:
         referenceNumber:
           type: string
           example: FT123456
-    SavingAccount:
+    SavingAccountInq:
       type: object
       properties:
         account:
@@ -894,6 +1018,109 @@ components:
           $ref: '#/components/schemas/Amount'
         workingBalance:
           $ref: '#/components/schemas/Amount'
+    SavingAccountPost:
+      type: object
+      properties:
+        customerNumber:
+          type: string
+          example: '118951'
+        category:
+          type: string
+          example: "6009"
+        currency:
+          type: string
+          example: 'IDR'
+    DepositAccountInq:
+      type: object
+      properties:
+        account:
+          type: string
+          description: account number
+          example: '0123456'
+        depositAccount:
+          type: string
+        currency:
+          type: string
+          example: 'IDR'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        productName:
+          type: string
+          example: RENCANAJANGKA
+        interestRate:
+          type: string
+        valueDate:
+          type: string
+    DepositAccountPost:
+      type: object
+      properties:
+        valueDate:
+          type: string
+        maturityDate:
+          type: string
+        repayAccount:
+          type: string
+        nominatedAccount:
+          type: string
+        maturityInstrument:
+          type: string
+        payIntAtMat:
+          type: string
+        schedules:
+          type: string
+        calculationBase:
+          type: string
+        forwardBackward:
+          type: string
+        typeOfSchedule:
+          type: string
+        frequency:
+          type: string
+        depositType: #all.in.one.product
+          type: string
+        rollIntCap:
+          type: string
+        rollIntPay:
+          type: string
+        currency:
+          type: string
+    LoanAccountInq:
+      type: object
+      properties:
+        loanNumber:
+          type: string
+          description: account number
+          example: '0123456'
+        accountNumber:
+          type: string
+        currency:
+          type: string
+          example: 'IDR'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        interestRate:
+          type: string
+        tenor:
+          type: string
+          example: "36"
+        annuityRepayAmount:
+          $ref: '#/components/schemas/Amount'
+        outstandingAmount:
+          $ref: '#/components/schemas/Amount'
+        interestArrears:
+          type: string
+        totalInstallment:
+          type: string
+        valueDate:
+          type: string
+        finalMaturityDate:
+          type: string
+        installment:
+          type: string
+        paymentLoanDate:
+          type: string
+        paymentInterestDate:
+          type: string
     Amount:
       type: string
       example: '18031.28'
@@ -914,7 +1141,7 @@ components:
           example: "Biaya servis AC"
         terminalId:
           type: string
-          description: Terminal Id or customerId for MB trx
+          description: Terminal Id or CIF number for MB trx
           example: "ATM1001"
         referenceNumber:
           type: string
@@ -941,7 +1168,7 @@ components:
           example: "Biaya servis AC"
         terminalId:
           type: string
-          description: Terminal Id or customerId for MB trx
+          description: Terminal Id or CIF number for MB trx
           example: "ATM1001"
         referenceNumber:
           type: string
@@ -989,6 +1216,7 @@ components:
         sn:
           type: string
           example: "12345123451234512345"
+          description: "Serial Number"
         customerName:
           type: string
           example: "Iwank"
@@ -1006,13 +1234,14 @@ components:
           example: "12345678"
         type:
           type: string
-          example: "PULSA"
+          example: "PULSA, PLN, PBB, PDAM, etc"
         billerId:
           type: string
-          example: "XLPRE"
+          example: "XLPRE, XLDATA, etc"
         productId:
           type: string
           example: "0050"
+          description: "Usually related to denomination"
         amount:
           $ref: '#/components/schemas/Amount'
         fee:
@@ -1022,11 +1251,11 @@ components:
           example: "Beli pulsa XL 50K"
         termId:
           type: string
-          description: Terminal Id or customerId for MB trx
+          description: Terminal Id or CIF number for MB trx
           example: "ATM1001"
         termType:
           type: string
-          description: Terminal Id or customerId for MB trx
+          description: Terminal Type (MB, ATM, LP, SBS)
           example: "ATM/MB/LP"
         referenceNumber:
           type: string
