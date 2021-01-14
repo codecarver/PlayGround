@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: micro-gate
   description: This is the documentation of micro-gate REST API specification.
-  version: 0.1.3
+  version: 0.1.5
 servers:
   - url: http://172.19.252.114:7000/
 tags:
@@ -59,7 +59,7 @@ paths:
       parameters:
         - name: customerNumber
           in: query
-          description: Account Number
+          description: Customer Number
           required: true
           schema:
             type: string
@@ -675,8 +675,11 @@ paths:
                     type: string
                     description: Response Description
                     example: "SUCCESS"
-                  balance:
-                    $ref: '#/components/schemas/Amount'
+                  data:
+                    type: object
+                    properties:
+                      balance:
+                          $ref: '#/components/schemas/Amount'
   '/trx/transfer':  # done
     get:
       tags:
