@@ -2,6 +2,7 @@ openapi: 3.0.1
 info:
   x-logo:
     url: "https://www.digitalmarketingschool.id/wp-content/uploads/2019/11/Sarana-Pactindo.jpg"
+    
   title: iGate-T24 REST API
   description: |
     E-mail: support@pactindo.com
@@ -62,7 +63,8 @@ paths:
     get:
       tags:
         - 'customer'
-      summary: Find Customer by Account Number, Customer Number, or by NIK
+      summary: Find Customer
+      description: Find Customer by Account Number, Customer Number, or by NIK
       operationId: findCust
       parameters:
         - name: accountNumber
