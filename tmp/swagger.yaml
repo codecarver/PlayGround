@@ -5,7 +5,7 @@ info:
     E-mail: support@pactindo.com
     
     # Introduction
-    The iGate API is built on HTTP. Our API is RESTful. It has predictable resource URLs. It also accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use iGate's API.
+    The iGate API is built on HTTP. It accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use iGate's API.
     
     # Response
     The API uses standard HTTP status codes to indicate the success or failure of the API call. When iGate return 200 response, the body of the response will also attach additional response code and description in the following format:
@@ -17,13 +17,13 @@ info:
     }
     ```
     
-    Full response code list will provided on separate document.
+    Full response code list will provided on separate document (TBD).
     
-    # Flow
-    ## 1. Normal Flow
+    ## Flow
+    ### 1. Normal Flow
     ![Normal Flow](https://microspeck.pactindo.com/amartha/amartha-normal.png "Normal Flow")
     
-    ## 2. Pending Flow (Callback)
+    ### 2. Pending Flow (Callback)
     ![Pending Flow](https://microspeck.pactindo.com/amartha/amartha-pending.png "Pending Flow")
 
   
