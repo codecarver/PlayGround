@@ -435,11 +435,21 @@ paths:
           required: true
           schema:
             type: string
-        - name: type
+        - name: types
           in: query
           required: true
           schema:
             type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: ['01', '02', '03']
+          description: >
+            Sort order:
+             * '01' - PLN Purchase
+             * '02' - Telco Postpaid
+             * '03' - PLN Postpaid
         - name: billerId
           in: query
           required: true
