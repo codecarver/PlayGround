@@ -154,6 +154,7 @@ paths:
       operationId: findSavingAccount
       parameters:
         - name: customerNumber
+          example: 1000012345
           in: query
           description: CIF Number
           required: true
