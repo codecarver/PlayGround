@@ -1,7 +1,16 @@
 openapi: 3.0.1
 info:
+  x-logo:
+    url: "https://pactindo.com/images/header-logo.png"
   title: micro-gate
-  description: This is the documentation of micro-gate REST API specification.
+  description: 
+  
+    # Introduction
+    The Engine API is an HTTP API served by Docker Engine. It is the API the Docker client uses to communicate with the Engine, so everything the Docker client can do can be done with the API.
+
+    Most of the client's commands map directly to API endpoints (e.g. `docker ps` is `GET /containers/json`). The notable exception is running containers, which consists of several API calls.
+
+    # Errors
   version: 0.1.8
   
 servers:
