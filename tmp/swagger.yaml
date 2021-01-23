@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: micro-gate
   description: This is the documentation of micro-gate REST API specification.
-  version: 0.1.7
+  version: 0.1.8
   
 servers:
   - url: http://172.19.252.114:7000/
@@ -73,6 +73,12 @@ paths:
           description: NIK
           schema:
             type: string
+        - name: referenceNumber
+          in: query
+          description: Reference Number
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -134,12 +140,19 @@ paths:
       parameters:
         - name: accountNumber
           in: query
+          example: "1000012345"
           description: Account Number
           schema:
             type: string
         - name: customerNumber
           in: query
           description: Customer Number
+          schema:
+            type: string
+        - name: referenceNumber
+          in: query
+          description: Rereference Number
+          required: true
           schema:
             type: string
       responses:
@@ -213,6 +226,11 @@ paths:
           description: Customer Number
           schema:
             type: string
+        - name: referenceNumber
+          in: query
+          description: Reference Number
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -284,6 +302,12 @@ paths:
           description: Customer Number
           schema:
             type: string
+        - name: referenceNumber
+          in: query
+          description: Reference Number
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: successful operation
@@ -330,6 +354,7 @@ paths:
         - account
       summary: Account Statement
       operationId: accountStatement
+      description: For Mini Account Statement, do not send startDate, endDate, and Index fields.
       parameters:
         - name: account
           in: query
@@ -359,6 +384,12 @@ paths:
           in: query
           description: Index
           required: false
+          schema:
+            type: string
+        - name: referenceNumber
+          in: query
+          description: Reference Number
+          required: true
           schema:
             type: string
       responses:
@@ -524,7 +555,7 @@ paths:
             schema:
               required: 
                 - accountNumber
-                - termId
+                - termType
                 - referenceNumber
               type: object
               properties:
@@ -536,7 +567,8 @@ paths:
                   example: "ATM1001"
                 termType:
                   type: string
-                  example: "ATM"
+                  example: "6011"
+                  description: Terminal or Merchant Type (refer to ISO8583 spec)
                 referenceNumber:
                   type: string
                   example: "87654321"
@@ -732,12 +764,20 @@ paths:
           name: srcAccount
           description: Source Account
           example: "12345678"
+          required: true
           schema:
             type: string
         - in: query
           name: destAccount
           example: "87654321"
+          required: true
           description: Destination Account
+          schema:
+            type: string
+        - in: query
+          name: referenceNumber
+          description: Reference Number
+          required: true
           schema:
             type: string
       responses:
@@ -786,6 +826,7 @@ paths:
                     type: string
                     description: Response Description
                     example: "SUCCESS"
+                    
   '/trx/onlineTransfer':  # done
     get:
       tags:
@@ -797,18 +838,28 @@ paths:
           name: srcAccount
           description: Source Account
           example: "12345678"
+          required: true
           schema:
             type: string
         - in: query
-          name: descAccount
+          name: destAccount
           example: "87654321"
+          required: true
           description: Destination Account
           schema:
             type: string
         - in: query
           name: destBankCode
           example: "009"
+          required: true
           description: Destination Bank Code
+          schema:
+            type: string
+        - in: query
+          name: referenceNumber
+          example: "1122334455"
+          required: true
+          description: Reference Number
           schema:
             type: string
       responses:
@@ -1175,7 +1226,7 @@ components:
         srcAccount:
           type: string
           example: "12345678"
-        descAccount:
+        destAccount:
           type: string
           example: "87654321"
         amount:
@@ -1187,6 +1238,10 @@ components:
           type: string
           description: Terminal Id or Customer Number for MB trx
           example: "ATM1001"
+        terminalType:
+          type: string
+          description: Merchant or Terminal Type. Refer to ISO8583 spec.
+          example: "6011"
         referenceNumber:
           type: string
           example: "1122334455"
@@ -1199,7 +1254,7 @@ components:
         cardNumber:
           type: string
           example: "58791234578"
-        descAccount:
+        destAccount:
           type: string
           example: "87654321"
         descBankAccount:
@@ -1312,4 +1367,3 @@ components:
           example: "Value is same as inquiry response"
     
         
-
