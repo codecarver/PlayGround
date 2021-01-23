@@ -1,10 +1,10 @@
 openapi: 3.0.1
 info:
   x-logo:
-    url: "https://pactindo.com/images/header-logo.png"
+    url: "https://www.digitalmarketingschool.id/wp-content/uploads/2019/11/Sarana-Pactindo.jpg"
   title: micro-gate
-  description: 
-  
+  description: |
+    
     # Introduction
     The Engine API is an HTTP API served by Docker Engine. It is the API the Docker client uses to communicate with the Engine, so everything the Docker client can do can be done with the API.
 
