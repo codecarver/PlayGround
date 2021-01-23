@@ -2,96 +2,75 @@ openapi: 3.0.1
 info:
   title: micro-gate
   description: This is the documentation of micro-gate REST API specification.
-  version: 0.1.5
+  version: 0.1.7
+  
 servers:
   - url: http://172.19.252.114:7000/
+
 tags:
   - name: customer
     description: Everything about Customer
+    # find customer(by customer number, account number, or by NIK)
+    # create customer
+    
   - name: account
     description: Everything about Account
+    # find saving account list by account number or customer number
+    # find deposit account list by account number or customer number
+    # find loan account list by account number or customer number
+    
+    # create saving account
+    # create deposit account
+    # create loan account
+    
+    # account statement (saving)
+    
   - name: transaction
     description: Everything about Transaction
-  - name: nik
-    description: Everything about NIK
+    # balance inquiry
+    # withdrawal
+    # cardless withdrawal
+    # deposit
+    # transfer (inquiry and posting)
+    # transfer ATMB
+    # transfer Jalin
+    # purchase payment
+    
   - name: sikp
     description: Everything about SIKP
+    # get token
+    # inquiry
+    # transfer posting
+    # transaction history
+    
   - name: flpp
     description: Everything about FLPP
+    
+  - name: network
+    description: Everything about Network and Security
+    # pin verification
+    
 paths:
-  '/customer/findByAcc': # done
+  '/customer': # done
     get:
       tags:
-        - 'customer, account'
-      summary: Find Customer by Account Number
-      operationId: findCustByAcc
+        - 'customer'
+      summary: Find Customer by Account Number, Customer Number, or by NIK
+      operationId: findCust
       parameters:
         - name: accountNumber
           in: query
           description: Account Number
-          required: true
           schema:
             type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                    description: Response Code
-                    example: "00"
-                  description:
-                    type: string
-                    description: Response Description
-                    example: SUCCESS
-                  data:
-                    $ref: '#/components/schemas/CustomerInquiry'
-  '/customer/findByCif': # done
-    get:
-      tags:
-        - customer
-      summary: Find Customer by CIF Number
-      operationId: findCustByCif
-      parameters:
         - name: customerNumber
           in: query
           description: Customer Number
-          required: true
           schema:
             type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                    description: Response Code
-                    example: "00"
-                  description:
-                    type: string
-                    description: Response Description
-                    example: SUCCESS
-                  data:
-                    $ref: '#/components/schemas/CustomerInquiry'
-  '/customer/findByNIK': # done
-    get:
-      tags:
-        - 'customer, nik'
-      summary: Find Customer by NIK
-      operationId: findCustByNIK
-      parameters:
         - name: nik
           in: query
           description: NIK
-          required: true
           schema:
             type: string
       responses:
@@ -112,7 +91,7 @@ paths:
                     example: SUCCESS
                   data:
                     $ref: '#/components/schemas/CustomerInquiry'
-  '/customer': # done
+  
     post:
       tags:
         - customer
@@ -150,14 +129,17 @@ paths:
     get:
       tags:
         - account
-      summary: Find Saving Account
+      summary: Find Saving Account by Account Number or Customer Number
       operationId: findSavingAccount
       parameters:
-        - name: customerNumber
-          example: 1000012345
+        - name: accountNumber
           in: query
-          description: CIF Number
-          required: true
+          description: Account Number
+          schema:
+            type: string
+        - name: customerNumber
+          in: query
+          description: Customer Number
           schema:
             type: string
       responses:
@@ -218,13 +200,17 @@ paths:
     get:
       tags:
         - account
-      summary: Find Deposit Account
+      summary: Find Deposit Account by Account Number or Customer Number
       operationId: findDepositAccount
       parameters:
+        - name: accountNumber
+          in: query
+          description: Account Number
+          schema:
+            type: string
         - name: customerNumber
           in: query
-          description: CIF Number
-          required: true
+          description: Customer Number
           schema:
             type: string
       responses:
@@ -285,13 +271,17 @@ paths:
     get:
       tags:
         - account
-      summary: Find Loan Account
+      summary: Find Loan Account by Account Number or Customer Number
       operationId: findLoanAccount
       parameters:
+        - name: accountNumber
+          in: query
+          description: Account Number
+          schema:
+            type: string
         - name: customerNumber
           in: query
-          description: CIF Number
-          required: true
+          description: Customer Number
           schema:
             type: string
       responses:
@@ -522,6 +512,56 @@ paths:
                     oneOf:
                       - $ref: '#/components/schemas/PurchasePulsaPost'
                       - $ref: '#/components/schemas/PurchaseTokenPlnPost'
+  '/trx/balanceInquiry':  # done
+    post:
+      tags:
+        - transaction
+      summary: Balance Inquiry
+      operationId: balanceInquiry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - accountNumber
+                - termId
+                - referenceNumber
+              type: object
+              properties:
+                accountNumber:
+                  type: string
+                  example: "12345678"
+                termId:
+                  type: string
+                  example: "ATM1001"
+                termType:
+                  type: string
+                  example: "ATM"
+                referenceNumber:
+                  type: string
+                  example: "87654321"
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                    description: Response Code
+                    example: "00"
+                  description:
+                    type: string
+                    description: Response Description
+                    example: "SUCCESS"
+                  data:
+                    type: object
+                    properties:
+                      balance:
+                          $ref: '#/components/schemas/Amount'
   '/trx/withdrawal':  # done
     post:
       tags:
@@ -1145,7 +1185,7 @@ components:
           example: "Biaya servis AC"
         terminalId:
           type: string
-          description: Terminal Id or CIF number for MB trx
+          description: Terminal Id or Customer Number for MB trx
           example: "ATM1001"
         referenceNumber:
           type: string
@@ -1172,7 +1212,7 @@ components:
           example: "Biaya servis AC"
         terminalId:
           type: string
-          description: Terminal Id or CIF number for MB trx
+          description: Terminal Id or Customer Number for MB trx
           example: "ATM1001"
         referenceNumber:
           type: string
@@ -1255,7 +1295,7 @@ components:
           example: "Beli pulsa XL 50K"
         termId:
           type: string
-          description: Terminal Id or CIF number for MB trx
+          description: Terminal Id or Customer Number for MB trx
           example: "ATM1001"
         termType:
           type: string
@@ -1272,3 +1312,4 @@ components:
           example: "Value is same as inquiry response"
     
         
+
