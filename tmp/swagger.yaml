@@ -2,16 +2,14 @@ openapi: 3.0.1
 info:
   x-logo:
     url: "https://www.digitalmarketingschool.id/wp-content/uploads/2019/11/Sarana-Pactindo.jpg"
-  title: micro-gate
+  title: iGate-T24 REST API
   description: |
+    E-mail: support@pactindo.com
     
     # Introduction
-    The Engine API is an HTTP API served by Docker Engine. It is the API the Docker client uses to communicate with the Engine, so everything the Docker client can do can be done with the API.
-
-    Most of the client's commands map directly to API endpoints (e.g. `docker ps` is `GET /containers/json`). The notable exception is running containers, which consists of several API calls.
-
-    # Errors
-  version: 0.1.8
+    The iGate API is built on HTTP. Our API is RESTful. It has predictable resource URLs. It returns HTTP response codes to indicate errors. Combined with 'responseCode' and 'description' field on each successfull response. It also accepts and returns JSON in the HTTP body. You can use your favorite HTTP/REST library for your programming language to use iGate's API.
+    
+  version: 0.2.0
   
 servers:
   - url: http://172.19.252.114:7000/
