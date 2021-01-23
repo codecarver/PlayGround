@@ -19,11 +19,13 @@ info:
     
     Full response code list will provided on separate document (TBD).
     
-    ## Flow
-    ### 1. Normal Flow
+    # Flow
+    1. Normal Flow
+    
     ![Normal Flow](https://microspeck.pactindo.com/amartha/amartha-normal.png "Normal Flow")
     
-    ### 2. Pending Flow (Callback)
+    2. Pending Flow (Callback)
+    
     ![Pending Flow](https://microspeck.pactindo.com/amartha/amartha-pending.png "Pending Flow")
 
   
