@@ -18,6 +18,14 @@ info:
     ```
     
     Full response code list will provided on separate document.
+    
+    # Flow
+    ## 1 Normal Flow
+    ![Normal Flow](https://microspeck.pactindo.com/amartha/amartha-normal.png "Normal Flow")
+    
+    ## 2 Pending Flow (Callback)
+    ![Pending Flow](https://microspeck.pactindo.com/amartha/amartha-pending.png "Pending Flow")
+
   
   x-logo:
     url: "https://www.digitalmarketingschool.id/wp-content/uploads/2019/11/Sarana-Pactindo.jpg"  
