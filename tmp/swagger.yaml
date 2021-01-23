@@ -64,7 +64,8 @@ paths:
       tags:
         - 'customer'
       summary: Find Customer
-      description: Find Customer by Account Number, Customer Number, or by NIK
+      description: |
+        *Find Customer by Account Number, Customer Number, or by NIK*
       operationId: findCust
       parameters:
         - name: accountNumber
